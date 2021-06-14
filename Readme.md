@@ -1,6 +1,6 @@
 <br />
 <p align="center">
-  <a href="https://github.com/pieter129/KaldiSpokenTermDetectionWrapper">
+  <a href="https://github.com/fdmcgregor/SouthAfricanSpeechAnalyticsWebInterface">
     <img src="images/logo.png" alt="Logo" width="160" height="80">
   </a>
   <h1 align="center">Web interface</h1>
@@ -15,9 +15,9 @@
 
 ## Table of Contents
 
-* [Starting up]
-* [Getting your server production ready]
-* [Code architecture overview]
+* [Starting up](#starting)
+* [Getting your server production ready](#production)
+* [Code architecture overview](#overview)
 * [License](#license)
 * [References](#references)
 
@@ -36,7 +36,7 @@ with the support of the South Africa Department of Sports, Arts and Culture
 # Starting up
 1. Start a new ec2 instance on AWS running Ubuntu 18.04
 2. Open port 8000 for development and 80 for testing nginx.
-3. `git clone https://github.com/fdmcgregor/SouthAfricanSpeechAnalyticsWebInterface.git`
+3. Clone the repo `git clone https://github.com/fdmcgregor/SouthAfricanSpeechAnalyticsWebInterface.git` and rename it to `django_project` such that the project exists at `~/django_project`: `mv SouthAfricanSpeechAnalyticsWebInterface django_project`
 4. Run `install_dependencies.sh`
 5. Create a `.env` file containing private keys with the following: 
 
