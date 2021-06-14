@@ -1,8 +1,44 @@
+<br />
+<p align="center">
+  <a href="https://github.com/pieter129/KaldiSpokenTermDetectionWrapper">
+    <img src="images/logo.png" alt="Logo" width="160" height="80">
+  </a>
+  <h1 align="center">Web interface</h1>
+  <p align="center">
+    Web interface for South African speech analytics. 
+    <br />
+    Web app built with django.
+    <br />
+    <br />
+  </p>
+</p>
+
+## Table of Contents
+
+* [Starting up]
+* [Getting your server production ready]
+* [Code architecture overview]
+* [License](#license)
+* [References](#references)
+
+
+## About The Project
+
+**Version**: 0.1
+**Date**: 2021-06-14 
+
+This repository was developed and released by [Saigen (Pty) Ltd](https://www.saigen.co.za/) as part of the 
+Speech Analytics for the South African Languages (SASAL) project carried out 
+with the support of the South Africa Department of Sports, Arts and Culture 
+(2018-06-01 to 2021-07-31).
+
+
 # Starting up
 1. Start a new ec2 instance on AWS running Ubuntu 18.04
 2. Open port 8000 for development and 80 for testing nginx.
-2. Run `install_dependencies.sh`
-3. Create a `.env` file containing private keys with the following: 
+3. `git clone https://github.com/fdmcgregor/SouthAfricanSpeechAnalyticsWebInterface.git`
+4. Run `install_dependencies.sh`
+5. Create a `.env` file containing private keys with the following: 
 
     - AWS credentials to host the media files on s3. Add `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY`, `AWS_STORAGE_BUCKET_NAME`, `AWS_S3_ENDPOINT_URL`. It is also useful to set your AWS command line interface at this stage `aws configure`. Copy the static files to your s3 bucket as we serve it form there.
 
@@ -135,3 +171,12 @@ For changes to take effect:
 ###  
 `python3 manage.py migrate` 
 ###  
+    
+## License
+
+Distributed under the [Creative Commons Attribution 4.0 License](https://creativecommons.org/licenses/by/4.0/legalcode).
+See `LICENSE` for more information.
+    
+## References
+[1] (https://kaldi-asr.org/doc/kws.html)  
+[2] (https://github.com/pieter129/KaldiSpokenTermDetectionWrapper) 
