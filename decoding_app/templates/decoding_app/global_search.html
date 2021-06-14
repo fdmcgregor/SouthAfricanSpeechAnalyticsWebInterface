@@ -1,0 +1,83 @@
+{% extends "decoding_app/base.html" %}
+
+{% block content %}
+
+<legend class="border-bottom mb-4">Search keywords across all ({{ num_posts }}) files </legend>
+<form id="globalKeywordForm" method="post">
+    {% csrf_token %}
+    <fieldset class="form-group">
+        {% for field in form %}
+            
+            {{ field }}
+            
+        {% endfor %}
+    </fieldset>
+    <div class="form-group">
+        <button class="btn btn-outline-info" id="keywordButton" type="submit"> Search</button>
+    </div>
+</form>
+
+<legend class="border-bottom mb-4">Results ({{ results_keyword }})</legend>
+
+
+{% for post, count in results %}
+
+    <form class="globalkeywordForm" method="post">
+        {% csrf_token %}
+        
+        <button class="btn-link" value="{{ results_keyword }}"> {{ post.title }} ({{count}} occurrences)</button>
+        <div class="article-metadata">
+            <small class="text-muted">{{ post.date_posted|date:"H:i d F Y" }}</small>
+        </div>
+        
+        <input type="text" name="keyword" class="form-control-hide" maxlength="100" value="{{ results_keyword }}">        
+        <input type="hidden" name="global_search_redirect" value="true">
+        <input type="hidden" name="post_id" value="{{ post.id }}">
+    </form>
+    
+{% endfor %}
+
+
+
+<!-- Search history and suggestions -->
+
+<div id="row" class="mb-3">
+    <div id="column">
+        <legend>Similar words</legend>
+        <div>
+        {% for suggestion in suggestions %}
+            <div class="mx-3">
+
+            <form method="post">
+                {% csrf_token %}
+                <input type="text" name="keyword" class="form-control-hide" maxlength="100" value="{{ suggestion }}">
+                <button class="btn-link" value="{{ suggestion }}" type="submit"> {{ suggestion }}</button>
+            </form>
+            </div>
+        {% endfor %}
+        </div>
+    </div>
+
+
+    <div id="column">
+        <legend>Last searched</legend>
+        <div>
+        {% for searchquery in searchqueries %}
+            <div class="mx-3">
+            
+            <form method="post">
+                {% csrf_token %}
+                <input type="text" name="keyword" class="form-control-hide" maxlength="100" value="{{ searchquery.keyword }}">
+                <button class="btn-link" value="{{ searchquery.keyword }}" type="submit"> {{ searchquery.keyword }}</button>
+            </form>
+
+
+            </div>
+        {% endfor %}
+        </div>
+    </div>
+</div>
+
+
+
+{% endblock content %}

@@ -1,0 +1,39 @@
+{% extends "decoding_app/base.html" %}
+
+{% block content %}
+
+
+
+
+    <div class="content-section">
+
+      <legend class="border-bottom mb-4">Welcome</legend>
+
+      <div> 
+        <div>
+          {% load static %}
+          <img src="{% static 'decoding_app/landingimage.svg' %} " class="img-fluid">
+        </div>
+        <div class="mb-3 mt-3"> 
+        </div>
+      </div>
+
+    </div>
+
+    <div class="content-section">
+
+      {% if user.is_authenticated %}
+
+        <legend class="border-bottom mb-3">Speech analytics</legend>
+          <a class="btn btn-outline-primary btn-sm mt-1 mb-2" href="{% url 'post-create' %}">New Upload</a>
+          <a class="btn btn-outline-primary btn-sm mt-1 mb-2" href="{% url 'user-posts' user %}">Your Uploads</a>
+          <a class="btn btn-outline-primary btn-sm mt-1 mb-2" href="{% url 'global-search' %}"> Keyword Search </a>
+          <a class="btn btn-outline-primary btn-sm mt-1 mb-2" href="{% url 'esearch' %}"> Search Query </a>
+
+      {% else %}
+          <a class="ml-2" href="{% url 'login' %}">Log in</a> or<a class="ml-2" href="{% url 'register' %}">sign up</a> now to upload an audio file
+      {% endif %}
+    </div>
+
+
+{% endblock content %}

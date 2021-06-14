@@ -1,0 +1,411 @@
+body {
+  background: #fafafa;
+  color: #333333;
+  margin-top: 5rem;
+}
+
+.errorlist {
+  padding: 10px;
+  border-radius: 8px;
+  background-color: #f44336; /* Red */
+  color: white;
+  margin-bottom: 20px;
+  word-wrap: break-word;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  color: #6b6160;
+  width: 90%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+ul {
+  margin: 0;
+}
+
+.bg-steel {
+  background-color: #5f788a;
+}
+
+.site-header .navbar-nav .nav-link {
+  color: #cbd5db;
+}
+
+.site-header .navbar-nav .nav-link:hover {
+  color: #ffffff;
+}
+
+.site-header .navbar-nav .nav-link.active {
+  font-weight: 500;
+}
+
+.list-group-item-light {
+  width: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.content-section {
+  background: #ffffff;
+  padding: 10px 20px;
+  border: 1px solid #dddddd;
+  border-radius: 3px;
+  margin-bottom: 20px;
+  margin-top: 15px;
+
+  width: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.content-section2 {
+  background: #ffffff;
+  padding: 10px 20px;
+  border: 1px solid #dddddd;
+  border-radius: 3px;
+  margin-bottom: 20px;
+  margin-top: 15px;
+}
+
+
+.article-title {
+  color: #444444;
+  width: 100%;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+a.article-title:hover {
+  color: #428bca;
+  text-decoration: none;
+}
+
+.article-content {
+  white-space: pre-line;
+}
+
+.article-img {
+  height: 65px;
+  width: 65px;
+  margin-right: 16px;
+}
+
+.wordcloudimg {
+  width: 50%;
+  height: auto;
+}
+
+.alert {
+  margin-top: 15px;
+}
+.article-metadata {
+  padding-bottom: 1px;
+  margin-bottom: 4px;
+  border-bottom: 1px solid #e3e3e3;
+
+  width: 90%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.article-metadata a:hover {
+  color: #333;
+  text-decoration: none;
+}
+
+.article-svg {
+  width: 25px;
+  height: 25px;
+  vertical-align: middle;
+}
+
+.account-img {
+  height: 125px;
+  width: 125px;
+  margin-right: 20px;
+  margin-bottom: 16px;
+}
+
+.account-heading {
+  font-size: 2.5rem;
+}
+
+.center {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  width: 50%;
+}
+
+#more {display: none;}
+.form-control-hide {display: none;}
+
+#findtheproblem {background: red;}
+
+#moreBtn {
+  background:none;
+  border:none;
+  margin:0;
+  padding:0;
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+#moreBtn:hover{
+  color: rgb(162, 163, 162);
+}
+
+.wordLinkBtn {
+  color: rgb(0, 0, 0);
+  background:none;
+  border:none;
+  padding:0;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.wordLinkBtnRes {
+  background:none;
+  border:none;
+  margin-left:0;
+}
+
+.wordLinkBtn:hover{
+  color: rgb(73, 122, 146);
+}
+
+.wordLinkBtnHigh {
+  background:none;
+  border:none;
+  padding:0;
+  cursor: pointer;
+  text-decoration: none;
+  color: rgb(38, 124, 38);
+}
+
+.wordLinkBtnHigh:hover{
+  color: rgb(38, 54, 38);
+  text-decoration: underline;
+}
+
+.wordLinkBtnMed {
+  background:none;
+  border:none;
+  padding:0;
+  cursor: pointer;
+  text-decoration: none;
+  color: rgb(236, 131, 45);
+}
+
+.wordLinkBtnMed:hover{
+  color: rgb(211, 127, 1);  
+  text-decoration: underline;
+}
+
+.wordLinkBtnLow {
+  background:none;
+  border:none;
+  padding:0;
+  cursor: pointer;
+  text-decoration: none;
+  color: rgb(165, 29, 29);
+}
+
+.wordLinkBtnLow:hover{
+  color: rgba(180, 39, 39, 0.74);
+  text-decoration: underline;
+}
+
+.undoCursor {
+  cursor: auto;
+}
+
+mark {
+  color: rgb(214, 11, 11);
+  background: rgb(255, 255, 145);
+  border-radius: 8px;
+}
+
+.markCurrent {
+  color: rgb(0, 0, 0);
+  background: rgb(145, 248, 255);
+  border-radius: 8px;
+}
+
+#row {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  width: 100%;
+}
+
+#column {
+  display: flex;
+  flex-direction: column;
+  flex-basis: 100%;
+  flex: 1;
+}
+
+
+#headerLogo {
+  width: 100px;
+}
+
+.btn-link {
+  border: none;
+  outline: none;
+  background: none;
+  cursor: pointer;
+  color: #0000EE;
+  padding: 0;
+  text-decoration: underline;
+  font-family: inherit;
+  font-size: inherit;
+}
+
+#keywordForm {
+width: 70%;
+white-space: nowrap;
+text-overflow: ellipsis;
+}
+
+
+/* The switch - the box around the slider */
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 40px;
+  height: 20px;
+}
+
+/* Hide default HTML checkbox */
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+/* The slider */
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 13px;
+  width: 13px;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+input:checked + .slider {
+  background-color: #2196F3;
+}
+
+input:focus + .slider {
+  box-shadow: 0 0 1px #2196F3;
+}
+
+input:checked + .slider:before {
+  -webkit-transform: translateX(20px);
+  -ms-transform: translateX(20px);
+  transform: translateX(20px);
+}
+
+/* Rounded sliders */
+.slider.round {
+  border-radius: 34px;
+}
+
+.slider.round:before {
+  border-radius: 50%;
+}
+
+
+audio {
+  /* filter: sepia(20%) saturate(70%) grayscale(2) contrast(99%) invert(12%); */
+  width:100%;
+  height: 30px;
+  border-radius: 2px;
+}
+
+.button-box {
+  text-align:center;
+  margin-top:3px;
+}
+
+
+.loader {
+  border: 6px solid #f3f3f3; /* Light grey */
+  border-top: 6px solid #3498db; /* Blue */
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  animation: spin 2s linear infinite;
+  margin: 0 auto;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+
+
+.ghost {
+  color: transparent;
+  border:none;
+  background:none;
+  padding:0;
+  text-decoration: none; 
+}
+
+
+.reserveSpaceDiv {
+  display: inline-block;
+  padding-left:1.5px;
+  padding-right:1.5px;
+}
+
+.reserveSpaceDiv .ghost {
+  font-weight: bold;
+}
+
+.reserveSpaceDiv .wordLinkBtn {
+  position: absolute;
+  text-align: center;
+}
+
+.reserveSpaceDiv .wordLinkBtnHigh {
+  position: absolute;
+  text-align: center;
+}
+
+.reserveSpaceDiv .wordLinkBtnMed {
+  position: absolute;
+  text-align: center;
+}
+
+.reserveSpaceDiv .wordLinkBtnLow {
+  position: absolute;
+  text-align: center;
+}
+
+.sticky-top { top: 5em; }

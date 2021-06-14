@@ -1,0 +1,11 @@
+{% extends "decoding_app/base.html" %}
+
+{% block content %}
+<div class="content-section">
+    <legend class="border-bottom mb-4"> {{ title }}</legend>
+    <div class="mb-3">
+        {{ body }} <a href="{% url 'contact' %}"> contact us </a>
+
+    </div>
+</div>
+{% endblock content %}

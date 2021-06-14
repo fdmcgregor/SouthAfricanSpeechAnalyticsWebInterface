@@ -1,0 +1,48 @@
+{% extends "decoding_app/base.html" %}
+{% load crispy_forms_tags %}
+{% load static %}
+
+
+{% block content %}
+
+    {% load static %}
+    
+    <link href="{% static 'decoding_app/css/dropzone.css' %}" type="text/css" rel="stylesheet"/> 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.7.1/dropzone.js"></script>
+
+
+    <!-- transcription form -->
+    <div class="content-section2 desc" id="form_transcription">
+
+
+        <!-- Drad and drop -->
+        <div class="fileupload">
+            <form class="dropzone" id="dropzone_transcript_audio" action="{% url "verify" %}" method="post" enctype="multipart/form-data">
+
+                {% csrf_token %}
+                <div class="dz-message">Drop files here or click to upload.</div>
+                
+                <div class="metadataForm">
+                    {{ form|crispy }}
+                </div>
+
+            </form>
+        </div>
+
+        
+        <!-- Upload button -->
+        <div class="form-group mt-3" id="uploadfiles_transcription_div">
+            <button id="uploadfiles_transcription" class="btn btn-outline-info">Upload </button>
+            <button id="uploadfiles_transcription_loading" class="btn btn-outline-info" disabled>Validating... <div id="loader" class="loader"></div></button>
+            
+            <script type="text/javascript">
+                document.getElementById('uploadfiles_transcription_loading').style.display = "none";
+            </script>
+        </div>
+        
+    </div>
+
+    <script src="{% static 'decoding_app/upload_utils.js' %}"></script>
+
+{% endblock content %}
+

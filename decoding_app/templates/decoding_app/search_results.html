@@ -1,0 +1,277 @@
+<!-- Heading -->
+{% if searchresult_stats_c is not None %}
+
+{% if num_occurences >= 1 %}
+    <legend>Search Results ({{ num_occurences }})</legend>
+{% else %}
+    <legend>Search Results</legend>
+{% endif %}
+
+
+
+<div id="search_results_word_info_div"><div> 
+
+<!-- Script to manipulate search_results_word_info_div -->
+<script>
+
+    // global variables
+    var words_l = {{ searchresult_stats_l|safe }};
+    var words_r = {{ searchresult_stats_r|safe }};
+    var words_c = {{ searchresult_stats_c|safe }};
+    search_results_word_info_div = document.getElementById('search_results_word_info_div'); 
+
+
+    function create_search_results(){
+        // for each search hit create a div
+
+        for (var i = 0; i < words_c.length; i++){  
+
+            var par = document.createElement('p');
+    
+            // create new div
+            let search_results_inner_div = document.createElement('div');
+            search_results_inner_div.setAttribute("class", "p-2");
+            par.appendChild(document.createTextNode("... "));
+            
+
+            // left context
+            for (var j = 0; j < words_l[i].length; j++){
+                var lw_button = document.createElement('span');
+                lw_button.setAttribute("class", "wordLinkBtn");
+                lw_button.id = 'left_word_button'+i+j;
+                lw_button.innerHTML = words_l[i][j].word;
+                lw_button.setAttribute('onclick',`word_click(${words_l[i][j].startTime}, ${words_l[i][j].endTime})`);
+                //search_results_inner_div.appendChild(lw_button);
+                par.appendChild(lw_button);
+                par.appendChild(document.createTextNode(" "));
+            }
+
+            // keyword 
+            var kw_button = document.createElement('span');
+            kw_button.setAttribute("class", "wordLinkBtn");
+            kw_button.id = 'kw_word_button'+i;
+            kw_button.innerHTML = words_c[i].word;
+            kw_button.setAttribute('onclick',`word_click(${words_c[i].startTime}, ${words_c[i].endTime})`);
+
+            // mark to highlight
+            var w_mark = document.createElement('mark');
+            w_mark.appendChild(kw_button);
+            //search_results_inner_div.appendChild(w_mark);
+            par.appendChild(w_mark);
+            par.appendChild(document.createTextNode(" "));
+
+            // right context
+            for (var j = 0; j < words_r[i].length; j++){
+                var rw_button = document.createElement('span');
+                rw_button.setAttribute("class", "wordLinkBtn");
+                rw_button.id = 'right_word_button'+i+j;
+                rw_button.innerHTML = words_r[i][j].word;
+                rw_button.setAttribute('onclick',`word_click(${words_r[i][j].startTime}, ${words_r[i][j].endTime})`);
+                //search_results_inner_div.appendChild(rw_button);
+                par.appendChild(rw_button);
+                par.appendChild(document.createTextNode(" "));
+            }
+
+            // make ellipses 
+            par.appendChild(document.createTextNode(" ..."));
+
+            search_results_inner_div.appendChild(par);
+            search_results_word_info_div.appendChild(search_results_inner_div);
+        }
+        
+    }
+
+    function update_search_results_confidence(){
+
+        var isChecked = document.getElementById("confidence_toggle").checked;
+
+        if(isChecked){
+            // colour by word confidence
+            for (var i = 0; i < words_c.length; i++){  
+
+                // left context
+                for (var j = 0; j < words_l[i].length; j++){   
+                    if (words_l[i][j].confidence < 0.4){
+                        document.getElementById('left_word_button'+i+j).setAttribute("class", "wordLinkBtnLow");   
+                    } else if (words_l[i][j].confidence > 0.7){
+                        document.getElementById('left_word_button'+i+j).setAttribute("class", "wordLinkBtnHigh");
+                    } else {
+                        document.getElementById('left_word_button'+i+j).setAttribute("class", "wordLinkBtnMed");
+                    }
+                }
+
+                // keyword 
+                if (words_c[i].confidence < 0.4){
+                    document.getElementById('kw_word_button'+i).setAttribute("class", "wordLinkBtnLowRes");
+                } else if (words_c[i].confidence > 0.7){
+                    document.getElementById('kw_word_button'+i).setAttribute("class", "wordLinkBtnHighRes");
+                } else {
+                    document.getElementById('kw_word_button'+i).setAttribute("class", "wordLinkBtnMedRes");
+                }
+                // fix to not highlight space
+                document.getElementById('kw_word_button'+i).classList.add("wordLinkBtnRes");
+
+                // right context
+                for (var j = 0; j < words_r[i].length; j++){
+                    if (words_r[i][j].confidence < 0.4){
+                        document.getElementById('right_word_button'+i+j).setAttribute("class", "wordLinkBtnLow");
+                    } else if (words_r[i][j].confidence > 0.7){
+                        document.getElementById('right_word_button'+i+j).setAttribute("class", "wordLinkBtnHigh");
+                    } else {
+                        document.getElementById('right_word_button'+i+j).setAttribute("class", "wordLinkBtnMed");
+                    }
+                }
+            }
+        } else {
+            
+            // without colour confidences
+            for (var i = 0; i < words_c.length; i++){  
+                // left context
+                for (var j = 0; j < words_l[i].length; j++){
+                    document.getElementById('left_word_button'+i+j).setAttribute("class", "wordLinkBtn");
+                }
+                // keyword 
+                document.getElementById('kw_word_button'+i).setAttribute("class", "wordLinkBtn");
+                // fix to not highlight space
+                document.getElementById('kw_word_button'+i).classList.add("wordLinkBtnRes");
+                // right context
+                for (var j = 0; j < words_r[i].length; j++){
+                    document.getElementById('right_word_button'+i+j).setAttribute("class", "wordLinkBtn");
+                }
+            }
+        }
+    }
+
+    function create_speaker_info_links_search_results(){
+        // create links to hover speaker colour coded underlines
+          
+
+        for (var i = 0; i < words_c.length; i++){ 
+
+            // left context link hover functionality
+            for (var j = 0; j < words_l[i].length; j++){
+
+                // link the hover functionality
+                let id_ = '#spk_name' + words_l[i][j].speaker;
+                let local_id_ = 'left_word_button'+i+j;
+                
+                $(id_).mouseenter(function(){
+                    var button = document.getElementById(local_id_)
+                    if (button){
+                        button.style.borderBottomWidth = "3px";
+                    }
+                });
+                $(id_).mouseleave(function(){
+                    var button = document.getElementById(local_id_)
+                    if (button){
+                        button.style.borderBottomWidth = "1px";
+                    }
+                });
+
+            }
+            // keyword link hover functionality
+            let id_ = '#spk_name' + words_c[i].speaker;
+            let local_id_ = 'kw_word_button'+i;
+            $(id_).mouseenter(function(){
+                var button = document.getElementById(local_id_)
+                if (button){
+                    button.style.borderBottomWidth = "3px";
+                }
+            });
+            $(id_).mouseleave(function(){
+                var button = document.getElementById(local_id_)
+                if (button){
+                    button.style.borderBottomWidth = "1px";
+                }
+            });
+            
+            
+            // right context link hover functionality
+            for (var j = 0; j < words_r[i].length; j++){
+
+                let id_ = '#spk_name' + words_r[i][j].speaker;
+                let local_id_ = 'right_word_button'+i+j;
+                $(id_).mouseenter(function(){
+                    var button = document.getElementById(local_id_)
+                    if (button){
+                        button.style.borderBottomWidth = "3px";
+                    }
+                });
+                $(id_).mouseleave(function(){
+                    var button = document.getElementById(local_id_)
+                    if (button){
+                        button.style.borderBottomWidth = "1px";
+                    }
+                });
+            }
+        }  
+    }
+
+    function toggle_search_results_speaker_info(){
+        var diarBtn = document.getElementById("diarization_toggle").checked;
+        if (diarBtn) {
+            
+            // with speaker colour tags
+            for (var i = 0; i < words_c.length; i++){  
+                // left context
+                for (var j = 0; j < words_l[i].length; j++){
+                    document.getElementById('left_word_button'+i+j).style.borderBottom = "1px solid " + spk2colour[words_l[i][j].speaker];
+                }
+                // keyword 
+                document.getElementById('kw_word_button'+i).style.borderBottom = "1px solid " + spk2colour[words_c[i].speaker];
+                // right context
+                for (var j = 0; j < words_r[i].length; j++){
+                    document.getElementById('right_word_button'+i+j).style.borderBottom = "1px solid " + spk2colour[words_r[i][j].speaker];
+                }
+            }
+
+        } else {
+
+            // without speaker colour tags
+            for (var i = 0; i < words_c.length; i++){  
+                // left context
+                for (var j = 0; j < words_l[i].length; j++){
+                    document.getElementById('left_word_button'+i+j).style.borderBottom = "0px";
+                }
+                // keyword 
+                document.getElementById('kw_word_button'+i).style.borderBottom = "0px";
+                // right context
+                for (var j = 0; j < words_r[i].length; j++){
+                    document.getElementById('right_word_button'+i+j).style.borderBottom = "0px";
+                }
+            }
+
+        }
+    }
+
+    var local_spk2colour = {};
+    function get_speaker_colours(){
+
+        // get unique speakers and assign them colours
+        //var colours = ['rgba(255, 0, 0,', 'rgba(0, 255, 0,','rgba(0, 0, 255,','rgba(255, 255, 0,', 'rgba(255, 0, 255,', 'rgba(0, 255, 255,']
+        var colours = ['rgba(255, 0, 0,.3)', 'rgba(0, 255, 0,.3)','rgba(0, 0, 255,.3)','rgba(255, 255, 0,.3)', 'rgba(255, 0, 255,.3)', 'rgba(0, 255, 255,.3)']
+        var num_spks = 0;
+        
+        for (var i = 0; i < words.length; i++){
+            if(!spk2colour.hasOwnProperty(words[i].speaker)){
+
+            // set colour
+            local_spk2colour[words[i].speaker] = colours[num_spks]
+
+            num_spks += 1;
+            }
+        }
+    }
+
+    create_search_results();
+    update_search_results_confidence();
+    document.getElementById("confidence_toggle").addEventListener('click', update_search_results_confidence);
+
+    {% if searchresult_stats_c != None %}
+        create_speaker_info_links_search_results();
+        toggle_search_results_speaker_info();
+        document.getElementById("diarization_toggle").addEventListener('click', toggle_search_results_speaker_info);
+    {% endif %}
+    
+</script>
+{% endif %}

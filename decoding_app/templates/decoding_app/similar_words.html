@@ -1,0 +1,17 @@
+{% if count != 0 %}
+    <legend>Similar words</legend>
+{% endif %}
+
+
+{% for suggestion in suggestions %}
+    
+    <div class="mx-3">
+
+        <form class="keywordForm" method="post">
+            {% csrf_token %}
+            <input type="text" name="keyword" class="form-control-hide" maxlength="100" required id="id_keyword_suggest{{ forloop.counter }}" value="{{ suggestion }}"></input>
+            <button class="btn-link" value="{{ suggestion }}" onclick="searchKeyword(this.value)"> {{ suggestion }}</button>
+        </form>
+
+    </div>
+{% endfor %}

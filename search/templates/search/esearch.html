@@ -1,0 +1,100 @@
+{% extends "search/base_search.html" %}
+
+{% block content %}
+
+<legend class="border-bottom mb-4">Build query to search across all ({{ num_posts }}) files </legend>
+<div id="builder"></div>
+<button class="btn btn-primary" id="btn-get">Search</button>
+<button class="btn btn-warning" id="btn-reset">Reset</button>
+
+<form id="keywordForm" method="post">
+    {% csrf_token %}
+</form>
+
+
+<div id="esearch_results_div"><div> 
+
+<script>
+
+    $("keywordForm").submit(function(e){
+        e.preventDefault();
+    });
+    
+    // starting rules
+    var rules_basic = {
+        condition: 'AND',
+        rules: [{
+            id: 'name',
+            operator: 'contains',
+            value: "es2"
+        }, {
+            condition: 'OR',
+            rules: [{
+            id: 'transcript',
+            operator: 'contains',
+            value: "profit"
+        }, {
+            id: 'transcript',
+            operator: 'not_contains',
+            value: "or it can contain this"
+        }]
+        }]
+    };
+    
+    $('#builder').queryBuilder({
+        // plugins: ['bt-tooltip-errors'], not in the code/ cdn
+        operators: [
+            'contains', 'not_contains', { type: 'contains fuzzy', nb_inputs: 1, multiple: false, apply_to: ['string'] },
+        ],
+
+        filters: [{
+            id: 'transcript',
+            label: 'Transcript',
+            type: 'string',
+            operators: ['contains', 'contains fuzzy', 'not_contains'],
+        },{
+            id: 'name',
+            label: 'Title',
+            type: 'string',
+            operators: ['contains', 'not_contains']
+        },
+        ], 
+        //rules: rules_basic
+    });
+    
+    
+    $('#btn-get').on('click', function() {
+        var result = $('#builder').queryBuilder('getRules');
+        if (!$.isEmptyObject(result)) {
+            // post data to backend
+            var csrftoken = $('input[name=csrfmiddlewaretoken]').val();
+            var csrftoken = '{{ csrf_token }}';
+            console.log(csrftoken);
+
+            console.log(JSON.stringify(result, null, 2));
+
+            $.ajax({
+                type: "POST",
+                url: 'esearch',
+                data: {
+                    search_query: JSON.stringify(result, null, 2), // from form
+                    csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val(),
+                    action: 'post'
+                },
+                success: function (returnedData) {
+                    console.log("Submitted!");
+                    console.log(returnedData);
+                    $( '#esearch_results_div' ).html( returnedData );
+                }
+            });
+        } 
+    });
+    
+    $('#btn-reset').on('click', function() {
+        $('#builder').queryBuilder('reset');
+    });
+    
+    
+</script>
+
+{% endblock content %}

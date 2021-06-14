@@ -1,0 +1,34 @@
+{% extends "decoding_app/base.html" %}
+
+{% block content %}
+    <div class="content-section">
+        <legend class="border-bottom mb-4"> {{ title }}</legend>
+        <div class="mb-3">
+            For more information please contact us at:
+        </div>
+
+        <div>
+            Email: <a href='#'> {{ email}} </a>
+        </div>
+        <div>
+            Tel: <a href='#'> {{ tel}} </a>
+        </div>
+
+        <div class="mb-3 mt-3">
+            Or visit us at:
+        </div>
+        
+        <div class="mb-3">
+            <a href="{{ web_address }}"> {{ web_address }} </a>
+        </div>
+
+        <address>
+            {{ address.0 }}<br>
+            {{ address.1 }}<br>
+            {{ address.2 }}<br>
+            {{ address.3 }}
+        </address>
+
+
+    </div>
+{% endblock content %}

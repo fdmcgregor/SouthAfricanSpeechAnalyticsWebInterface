@@ -1,0 +1,98 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    {% comment %} <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous"> {% endcomment %}
+
+
+    <link rel="shortcut icon" href="{% static 'decoding_app/favicon.png' %}"/>
+    <link rel="stylesheet" type="text/css" href="{% static 'decoding_app/main.css' %}">
+    
+
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <link href="https://querybuilder.js.org/assets/css/style.css" rel="stylesheet" />
+    <link href="https://netdna.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/jQuery-QueryBuilder/dist/css/query-builder.default.min.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/jQuery-QueryBuilder@2.5.2/dist/js/query-builder.standalone.js"></script>
+
+
+</head>
+
+<body>
+
+    <!-- navigation -->
+    <header class="site-header">
+      <nav class="navbar navbar-expand-md navbar-dark bg-steel fixed-top">
+        <div class="container">
+          {% load static %}
+          <img src="{% static 'decoding_app/saigen_header.png' %}" id="headerLogo"> 
+          <a class="navbar-brand mr-4 ml-4" href="{% url 'decoding-app-home' %}" style="color:white;">Speech recognition platform</a>
+          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarToggle" aria-controls="navbarToggle" aria-expanded="false" aria-label="Toggle navigation">
+          </button>
+          <div class="collapse navbar-collapse" id="navbarToggle">
+            <div class="navbar-nav mr-auto">
+              <a class="nav-item nav-link" href="{% url 'decoding-app-home' %}">Home</a>
+              <a class="nav-item nav-link" style="margin-left: 2.5em;" href="{% url 'decoding-app-about' %}">About</a>
+            </div>
+            <!-- Navbar Right Side -->
+            <div class="navbar-nav">
+              {% if user.is_authenticated %}
+                <a class="nav-item nav-link ml-5" style="margin-left: 30.5em;" href="{% url 'post-create' %}">New Upload</a>
+                <a class="nav-item nav-link ml-5" style="margin-left: 2.5em;" href="{% url 'user-posts' user %}"> Your Uploads </a>
+                <a class="nav-item nav-link ml-5" style="margin-left: 2.5em;" href="{% url 'logout' %}">Logout</a>
+              {% else %}
+                <a class="nav-item nav-link ml-5" href="{% url 'login' %}">Login</a>
+                <a class="nav-item nav-link ml-5" href="{% url 'register' %}">Register</a>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <!-- content -->
+    <main role="main" class="container">
+      <div class="row">
+      
+        <div class="col-md-9">
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+            {% block content %}{% endblock %}
+
+        </div>
+        </div>
+        </div>
+        
+        <div class="col-md-3">
+          <div class="content-section">
+            <h3>Information</h3>
+              <ul class="list-group">
+                <li class="list-group-item list-group-item-light"><a class="text-muted" href="{% url 'post-create' %}">New Upload</a></li>
+                <li class="list-group-item list-group-item-light"><a class="text-muted" href="{% url 'user-posts' user %}"> Your Uploads </a></li>
+                <li class="list-group-item list-group-item-light"><a class="text-muted" href="{% url 'global-search' %}"> Keyword Search </a></li>
+                <li class="list-group-item list-group-item-light"><a class="text-muted" href="{% url 'esearch' %}"> Query Builder </a></li>
+                <li class="list-group-item list-group-item-light"><a class="text-muted" href="{% url 'profile' %}"> Profile Preferences</a></li>
+                <li class="list-group-item list-group-item-light"><a class="text-muted" href="{% url 'account' %}"> Account Stats </a></li>
+                <li class="list-group-item list-group-item-light"><a class="text-muted" href="{% url 'contact' %}"> Contact Us </a></li>
+              </ul>
+          </div>
+        </div>
+
+      </div>
+    </main>
+
+  <script src="{% static 'decoding_app/main.js' %}"></script>
+</body>
+</html>
+

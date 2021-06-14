@@ -1,0 +1,541 @@
+{% extends "decoding_app/detail_base.html" %}
+
+{% block content %}
+
+<div class="row">
+<div class="col-md-3">
+  <article class="media content-section m-3 sticky-top">
+    <div class="media-body">
+
+      <!-- Post metadata -->
+      <div class="article-metadata">
+        <a class="mr-2" href="{% url 'user-posts' object.author.username %}">{{ object.author }}</a>
+        <small class="text-muted">{{ object.date_posted|date:"F d, Y" }}</small>
+        
+        <h4 class="article-title" data-toggle="tooltip" title="{{ object.title }}">{{ object.title|slice:":13" }}{% if object.title|length > 13 %}...{% endif %}</h4>
+      </div>
+
+
+      <!-- Audio file -->
+      <div class="p-2">
+        <audio controls id="audio" controlsList="nodownload" width="300" height="100">
+            <source src="{{ object.audio_file.url }}" type="audio/mpeg">
+            Your browser does not support the audio element.
+        </audio>
+
+        {% if object.author == user %}
+
+          <!-- Back and Slow -->
+          <div id="row">
+            <div class="button-box  col-lg-12">
+                <button id="backBtn" class="btn btn-outline-info btn-sm m-1" onclick="back()"> <i class="fas fa-undo"></i> 5s</button>
+                {% comment %} <button id="slowBtn" class="btn btn-outline-primary btn-sm mt-1 mb-1" onclick="toggle_speed()"> Slow Speed </button> {% endcomment %}
+                <button class="btn btn-outline-info btn-sm m-1" onclick="set_speed(0.5)">0.5x</button>
+                <button class="btn btn-outline-info btn-sm m-1" onclick="set_speed(1.0)">1.0x</button>
+                <button class="btn btn-outline-info btn-sm m-1" onclick="set_speed(1.5)">1.5x</button>
+            </div>
+          </div>
+
+          <!-- Download -->
+          <div id="column" class="p-1">
+            <button type="button" class="btn btn-light btn-sm" disabled>Download transcript
+              <div class="button-box col-lg-12">
+                <a href="{% url "file-download" object.slug "docx" %}" download class="btn btn-outline-primary btn-sm" target="_blank">.docx</a>
+                <a href="{% url "file-download" object.slug "txt" %}" download class="btn btn-outline-primary btn-sm" target="_blank">.txt</a>
+                <a href="{% url "file-download" object.slug "json" %}" download class="btn btn-outline-primary btn-sm" target="_blank">.json</a>
+              </div>
+            </button>
+          </div>
+
+
+          <!-- download audio or delete -->
+          <div id="column" class="p-1">
+            <a href="{{ object.audio_file.url }}" download class="btn btn-outline-secondary btn-sm" target="_blank">Download audio</a>
+            <a class="btn btn-outline-danger btn-sm mt-1 mb-1" href="{% url 'post-delete' object.slug %}">Delete</a>
+          </div>
+              
+        {% endif %}
+    </div>
+  </article>
+
+</div>
+
+<div class="col-md-8">
+<article class="media content-section2 mr-5 ml-1">
+
+  <div class="media-body">
+
+        <div id="row">
+          <!-- Heading -->
+          <div id="column">
+            <fieldset>
+                  <legend class="border-bottom mb-4">Transcription ({{object.get_language_display }})</legend>
+            </fieldset>
+          </div>
+
+          <!-- Word confidence toggle -->
+          <div id="column" class="text-right">
+            <span> <small class="mr-3">word confidence </small> </span>
+              <div>
+                <label class="switch mr-5">
+                  
+                  <input type="checkbox" id="confidence_toggle">
+                  <span class="slider round"></span>
+                  
+                </label>
+              </div>
+          </div>
+
+          <!-- Speaker diarization toggle -->
+          {% if object.automatic_diarization == True %}
+            <div id="column" class="text-right">
+              <span> <small class="mr-3">speaker diarization </small> </span>
+              <div>
+                <label class="switch mr-5">
+                  
+                  <input type="checkbox" id="diarization_toggle">
+                  <span class="slider round"></span>
+                  
+                </label>
+              </div>
+            </div>
+          {% endif %}
+
+        </div>
+
+        <!-- Speakers -->
+        <div id="speaker_list_div" class="mb-2"></div>
+
+        <!-- Transcription -->
+        <div id="transcription_div" class="p-2"></div>
+        
+        {% if object.transcription_more != '' %}
+          <button class="mt-2 ml-2" onclick="showMoreFunction()" id="moreBtn">Read more</button>
+        {% endif %}
+
+      
+  </article>
+  <article class="media content-section2 mr-5 ml-1">
+
+    <!-- Keyword search form -->
+    <div class="p-1">
+        
+        <legend class="border-bottom mb-4">Search Keyword</legend>
+        <form id="keywordForm" method="post">
+            {% csrf_token %}
+            <fieldset class="form-group">
+                {% for field in form %}
+                  
+                    {{ field }}
+                  
+                {% endfor %}
+            </fieldset>
+            <div class="form-group">
+                <button class="btn btn-outline-info" id="keywordButton" type="submit">Search</button>
+            </div>
+            
+        </form>
+            
+            
+        <div id="container">
+          
+          <div id="search_results_div">
+            {% include "decoding_app/search_results.html" %}
+          </div>
+
+        </div>
+   </div>
+            
+        
+  </article>
+  <article class="media content-section2 mr-5 ml-1">
+
+        <!-- Similar words and Search history columns -->
+        <div id="row">
+          
+          <!-- Similar words -->
+          <div id="column">
+            <div id="similar_words_div">
+              {% include "decoding_app/similar_words.html" %}
+            </div>
+          </div>
+          
+          <!-- Search history -->
+          <div id="column">
+            <div id="last_searched_div">
+              {% include "decoding_app/last_searched.html" %}
+            </div>
+          </div>
+        </div>
+        
+        <!-- Wordcloud heading -->
+        {% comment %} <div class="pt-2">
+          <fieldset>
+            <legend class="border-bottom mb-4">Explore suggestions</legend>
+          </fieldset>
+        </div> {% endcomment %}
+        
+        <div>
+          <img class="img-fluid" src="{{ wordcloud }}">
+        </div>
+        
+        
+</article>
+</div>
+</div>
+
+
+  <script>
+
+      // global variables
+      var words = {{ object.words_json|safe }};
+      transcription_div = document.getElementById('transcription_div'); 
+
+      var showMore = false;
+      const num_words_less = 100;
+      var spk2colour = {};
+      var t_last = 0;
+
+
+      // add id to each word
+      words.forEach((item, i) => {
+        item.id = i;
+      });
+      var initialPlay="false";
+
+      // bold word that plays
+      $("#audio").bind('timeupdate', wordPosition);
+
+      function wordPosition(force = false){
+        audioElement=document.getElementById("audio");
+        t=audioElement.currentTime;
+        
+        w_id='word_button'
+      
+        // audio jump detected -> do all
+        if ((Math.abs(t - t_last) > 1.0 ) || (force == true) || (initialPlay=="false")) {
+          
+          //find word that is in that time
+          for (var i = 0; i < words.length; i++){ 
+            // un-bold words with endTime larger than currentTime                
+            if ((words[i].endTime > t)){
+              document.getElementById(w_id+i).style.opacity = "0.55";
+            }
+                        
+            // bold words with startTime less than currentTime                
+            if ((words[i].startTime < t)){
+              document.getElementById(w_id+i).style.opacity = "1.0";
+            } 
+          }
+          if (initialPlay=="false") {
+            initialPlay="true"
+          }
+        } 
+        // normal playback assumed -> bold words 1.5 seconds back
+        else {
+
+          var prevWords = words.filter(word => word.startTime < t && word.endTime > t-1.5);
+          for (var j = 0; j < prevWords.length; j++){ 
+            document.getElementById(w_id+prevWords[j].id).style.opacity = "1.0";
+          }
+        }
+
+        // update time
+        t_last=t;
+    }
+
+
+      // function to populate transcript div with word buttons that click and play the word
+      function create_transcript(){
+
+
+        var par = document.createElement('p');
+        for (var i = 0; i < words.length; i++){     
+
+          // create a button with on click and id 
+          var w_button = document.createElement('span');
+          w_button.id = 'word_button'+i;
+          w_button.innerHTML = words[i].word;
+          w_button.setAttribute('onclick',`word_click(${words[i].startTime}, -1)`);
+          w_button.setAttribute("class", "wordLinkBtn");
+
+          par.appendChild(w_button);
+          par.appendChild(document.createTextNode(" "));
+        }
+        transcription_div.appendChild(par);
+        
+        if (words.length > num_words_less){
+          var ellipses_button = document.createElement('span');
+          ellipses_button.id = 'ellipses_button';
+          ellipses_button.innerHTML = " ...";
+          par.appendChild(ellipses_button);
+
+          update_transcript_more_less(num_words_less);
+        }
+
+        // switch off loading
+        $( "#loader" ).hide();
+      }
+
+
+      // update the transcript to show more or less of the transcript
+      function update_transcript_more_less(num_words){
+        w_id='word_button'
+        
+        // show
+        if(showMore){
+          for (var i = num_words; i < words.length; i++){            
+            document.getElementById(w_id+i).style.display = "initial";
+            //document.getElementById('word_ghost_button'+i).style.display = "initial";
+          }
+          document.getElementById('ellipses_button').style.display = "none";
+        }
+        // hide
+        if(!showMore){
+          for (var i = num_words; i < words.length; i++){                      
+            document.getElementById(w_id+i).style.display = "none";
+          }
+          document.getElementById('ellipses_button').style.display = "initial";
+        }
+      }
+
+      // update the transcript to show colour coded confidence of word predictions
+      function update_confidences(){
+        w_id='word_button'
+        
+        if(showMore || words.length <= num_words_less){
+          num_words = words.length;
+        } else {
+          num_words = num_words_less;
+        }
+
+        var isChecked = document.getElementById("confidence_toggle").checked;
+        if(isChecked){
+          // colour by word confidence
+          for (var i = 0; i < num_words; i++){  
+            if (words[i].confidence < 0.4){
+              document.getElementById(w_id+i).setAttribute("class", "wordLinkBtnLow");
+            } else if (words[i].confidence > 0.7){
+              document.getElementById(w_id+i).setAttribute("class", "wordLinkBtnHigh");
+            } else {
+              document.getElementById(w_id+i).setAttribute("class", "wordLinkBtnMed");
+            }
+          }
+        } else {
+          // normal wordLinkBtn
+          for (var i = 0; i < num_words; i++){
+            document.getElementById(w_id+i).setAttribute("class", "wordLinkBtn");
+          }
+        }
+      }      
+
+
+      // play the file at the selected time
+      function word_click(startTime, endTime = -1, context = 0.5) {
+        var audio = document.getElementById("audio");
+        function checkTime() {
+            if (audio.currentTime >= endTime + context) {
+              audio.pause();
+            } else {
+              setTimeout(checkTime, 100); // call checkTime every 1/10th second until endTime 
+            }
+        }
+        audio.currentTime = Math.max(startTime - context, 0);
+        audio.play();
+        if (endTime != -1){
+          checkTime();
+        }
+      }
+
+      // high level toggle show more or less 
+      function showMoreFunction() {
+        var moreBtn = document.getElementById("moreBtn");
+        if (showMore) {
+          showMore = false;
+          moreBtn.textContent = 'Read more';
+          update_transcript_more_less(num_words_less);
+        } else {
+          showMore = true;
+          moreBtn.textContent = 'Read less';
+          update_transcript_more_less(num_words_less);
+          update_confidences(); // make sure new words have confidences
+        }
+      }
+
+
+      // underline words belonging to each speaker
+      function display_speaker_info(){
+        
+        w_id='word_button'
+        
+        // get unique speakers and assign them colours
+        var colours = ['rgba(4, 6, 171,.8)', 'rgba(249, 11, 39,.7)', 'rgba(0, 235, 0,.6)','rgba(255, 255, 0,.5)','rgba(255, 0, 255,.8)', 'rgba(0, 0, 0,.5)', 'rgba(0, 255, 255,.5)','rgba(255, 100, 255,.3)', 'rgba(100, 255, 255,.3)']
+        var num_spks = 0;
+        var spk_div = document.getElementById('speaker_list_div');
+        
+        for (var i = 0; i < words.length; i++){
+          if(!spk2colour.hasOwnProperty(words[i].speaker)){
+
+            // set colour
+            spk2colour[words[i].speaker] = colours[num_spks]
+
+            // display speaker list
+            var speaker_entry = document.createElement('li');
+            speaker_entry.style.color = colours[num_spks] 
+
+            // create button to hover and highlight 
+            var spk_name = document.createElement('button');
+            spk_name.innerText = "Speaker " + words[i].speaker;
+            spk_name.setAttribute("class", "wordLinkBtn");
+            spk_name.id = 'spk_name'+words[i].speaker;
+            speaker_entry.appendChild(spk_name);
+            spk_div.appendChild(speaker_entry);
+
+            num_spks += 1;
+          }
+        }
+
+        // create links to hover speaker colour coded underlines
+        for (var i = 0; i < words.length; i++){
+          // link the hover functionality
+          let id_ = '#spk_name' + words[i].speaker;
+          let local_id_ = w_id+i;          
+          $(id_).mouseenter(function(){
+            document.getElementById(local_id_).style.borderBottomWidth = "3px";
+          });
+          $(id_).mouseleave(function(){
+            document.getElementById(local_id_).style.borderBottomWidth = "1px";
+          });
+        }
+
+        // if there are search results load their speaker tags too (with ajax do not check if diar is true)
+        {% if searchresult_stats_c != None %}
+          create_speaker_info_links_search_results();
+        {% endif %}
+      }  
+
+
+      function toggle_speaker_info(){
+
+        w_id='word_button'
+
+        var diarBtn = document.getElementById("diarization_toggle").checked;
+        if (diarBtn) {
+          // create speaker colour coded underlines
+          for (var i = 0; i < words.length; i++){
+            document.getElementById(w_id+i).style.borderBottom = "1px solid " + spk2colour[words[i].speaker];
+          }
+          document.getElementById('speaker_list_div').style.display = "block";
+        } else {
+          // remove underlines
+          for (var i = 0; i < words.length; i++){
+            document.getElementById(w_id+i).style.borderBottom = "0px";
+          }
+          document.getElementById('speaker_list_div').style.display = "none";
+        }
+      }
+
+      // on start
+      create_transcript();      
+      document.getElementById("confidence_toggle").addEventListener('click', update_confidences);
+
+      if ("{{object.automatic_diarization}}" == "True"){
+        if (words[0].word != "Busy decoding..."){
+          display_speaker_info();
+          toggle_speaker_info();
+          document.getElementById("diarization_toggle").addEventListener('click', toggle_speaker_info);
+        }
+      }
+
+
+    function back(){
+      var audio = document.getElementById("audio");
+      var skip = 5.0;
+      if (audio.currentTime - skip > 0) {
+          var new_time = (audio.currentTime - skip).toString()
+          audio.currentTime = new_time;
+      }
+    }
+
+    function toggle_speed(){
+      var slowBtn = document.getElementById('slowBtn');
+      var audio = document.getElementById("audio");
+      if (audio.playbackRate == 1.0) {
+          audio.playbackRate = 0.5;
+          slowBtn.innerText = "Normal Speed"
+
+      } else {
+          audio.playbackRate = 1.0;
+          slowBtn.innerText = "Slow Speed"
+      }
+      
+    }
+
+    function set_speed(s){
+      var audio = document.getElementById("audio");
+      audio.playbackRate = s;      
+    }
+
+    // audio controls shortcuts
+    // ------------------------------
+    // cancel default f1 
+    window.addEventListener("keydown",function (e) {
+        if (e.keyCode === 112) { 
+            e.preventDefault();
+        }
+    })
+    // cancel default f3 
+    window.addEventListener("keydown",function (e) {
+        if (e.keyCode === 114) { 
+            e.preventDefault();
+        }
+    })
+    // play pause
+    $(document).keydown(function(e) {
+
+      var key_code=112; //f1
+
+      if ((e.which == key_code) || (e.keyCode == key_code)) {
+          console.log("play/pause");
+          if (audio.paused)
+              audio.play();
+          else
+              audio.pause();
+      }
+    });
+
+    // back
+    $(document).keydown(function(e) {
+        var key_code=113; //f2
+        var skip = 2.0;
+
+
+        if ((e.which == key_code) || (e.keyCode == key_code)) {
+
+            if (audio.currentTime - skip > 0) {
+
+                var new_time = (audio.currentTime - skip).toString()
+                audio.currentTime = new_time;
+
+            }
+        }
+
+    });
+
+    // speed up
+    $(document).keydown(function(e) {
+
+        var key_code=114; //f3
+        if ((e.which == key_code) || (e.keyCode==key_code)) {
+            console.log("speed up");
+            if (audio.playbackRate == 1.0) {
+                audio.playbackRate = 1.5;
+            } else {
+                audio.playbackRate = 1.0;
+            }
+        }
+    });
+
+
+    </script>
+{% endblock content %}
