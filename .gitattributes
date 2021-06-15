@@ -1,3 +1,4 @@
 models/afr_model.bin filter=lfs diff=lfs merge=lfs -text
 models/sotho_model.bin filter=lfs diff=lfs merge=lfs -text
 models/zulu_model.bin filter=lfs diff=lfs merge=lfs -text
+models/eng_model.bin filter=lfs diff=lfs merge=lfs -text
